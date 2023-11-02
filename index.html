@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Grocery Delivery</title>
+    <style>
+        body {
+            body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('background.jpg'); 
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+        }
+
+        header {
+            background-color: #5f04f3;
+            color: #fff;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        main {
+            width: 80%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .grocery-list {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            font-size: 24px;
+            margin: 0;
+            padding: 0;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            font-size: 18px;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        li:hover {
+            background-color: #f0f0f0;
+            transform: scale(1.02);
+        }
+
+        li input {
+            flex: 1;
+            border: none;
+            background-color: transparent;
+        }
+
+        #new-item {
+            padding: 5px;
+            margin-right: 10px;
+        }
+
+        #add-button {
+            padding: 10px 20px;
+            background-color: #a50b0b;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        .category-button {
+            margin: 10px;
+            padding: 10px 20px;
+            background-color: #963700b9;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .buy-button {
+            padding: 5px 10px;
+            background-color: #7a9b2c;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .purchased {
+            text-decoration: line-through;
+        }
+
+        footer {
+            text-align: center;
+            background-color: #390096d0;
+            color: #fff;
+            padding: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Grocery Delivery</h1>
+    </header>
+
+    <main>
+        <section class="grocery-list">
+            <h2>My Grocery List</h2>
+            <button class="category-button" onclick="filterItems('all')">All</button>
+            <button class="category-button" onclick="filterItems('vegetables')">Vegetables</button>
+            <button class="category-button" onclick="filterItems('fruits')">Fruits</button>
+            <button class="category-button" onclick="filterItems('dairy')">Dairy</button>
+            <ul id="grocery-items">
+                <!-- <li class="vegetables">Apples<input type="button" class="buy-button" value="Buy" onclick="buyItem(this)"></li>
+                <li class="fruits">Bananas<input type="button" class="buy-button" value="Buy" onclick="buyItem(this)"></li>
+                <li class="dairy">Milk<input type="button" class="buy-button" value="Buy" onclick="buyItem(this)"></li>
+                <li class="bread">Bread<input type="button" class="buy-button" value="Buy" onclick="buyItem(this)"></li>
+                <li class="vegetables">Carrots<input type="button" class="buy-button" value="Buy" onclick="buyItem(this)"></li>
+                <li class="fruits">Oranges<input type="button" class="buy-button" value="Buy" onclick="buyItem(this)"></li>
+                <li class="dairy">Cheese<input type="button" class="buy-button" value="Buy" onclick="buyItem(this)"></li>
+                <li class="bread">Baguette<input type="button" class="buy-button" value="Buy" onclick="buyItem(this)"></li> -->
+       
+            </ul>
+            <input type="text" id="new-item" placeholder="Add a new item">
+            <button id="add-button" onclick="addItem()">Add</button>
+        </section>
+    </main>
+    
+    <footer>
+        &copy; 2023 Grocery Delivery
+    </footer>
+
+    <script>
+        function filterItems(category) {
+            const items = document.querySelectorAll('li');
+            items.forEach(item => {
+                item.style.display = 'none';
+            });
+            if (category === 'all') {
+                items.forEach(item => {
+                    item.style.display = 'flex';
+                });
+            } else {
+                const filteredItems = document.querySelectorAll('.' + category);
+                filteredItems.forEach(item => {
+                    item.style.display = 'flex';
+                });
+            }
+        }
+
+        function addItem() {
+            const newItemInput = document.getElementById('new-item');
+            const newItemText = newItemInput.value.trim();
+            if (newItemText) {
+                const category = determineCategory(newItemText);
+                const groceryItems = document.getElementById('grocery-items');
+                const newItem = document.createElement('li');
+                newItem.className = category;
+                newItem.innerHTML = `<input type="text" value="${newItemText}" readonly><input type="button" class="buy-button" value="Buy" onclick="buyItem(this)">`;
+                groceryItems.appendChild(newItem);
+                newItemInput.value = '';
+            }
+        }
+
+        function buyItem(button) {
+            // Change the appearance of the item to indicate it's been purchased
+            const li = button.parentElement;
+            li.classList.toggle('purchased');
+        }
+
+        function determineCategory(itemName) {
+            const dairyKeywords = ['Milk', 'Cheese', 'Yogurt', 'Butter', 'Eggs'];
+            const fruitsKeywords = ['Apples', 'Bananas', 'Oranges', 'Strawberries', 'Grapes', 'Pineapples'];
+            const vegetablesKeywords = ['Carrots', 'Spinach', 'Bell_peppers', 'Cucumbers','Drumstick','Brinjal','Cucumber'];
+
+            const itemNameLower = itemName.toLowerCase();
+
+            if (dairyKeywords.some(keyword => itemNameLower.includes(keyword))) {
+                return 'dairy';
+            } else if (fruitsKeywords.some(keyword => itemNameLower.includes(keyword))) {
+                return 'fruits';
+            } else if (vegetablesKeywords.some(keyword => itemNameLower.includes(keyword))) {
+                return 'vegetables';
+            } else {
+                return 'other';
+            }
+        }
+    </script>
+</body>
+</html>
